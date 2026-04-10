@@ -6,13 +6,13 @@
   "permissions": ["activeTab"],
   "content_scripts": [
     {
-      "matches": ["https://www.windguru.com/*"],
-      "js": ["windguru.js"],
+      "matches": ["https://www.windguru.cz/*"],
+      "js": ["utils.js", "windguru.js"],
       "run_at": "document_idle"
     },
     {
       "matches": ["https://www.windfinder.com/*"],
-      "js": ["windfinder.js"],
+      "js": ["utils.js", "windfinder.js"],
       "run_at": "document_idle"
     }
   ]

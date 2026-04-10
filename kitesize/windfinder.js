@@ -10,7 +10,8 @@ function windfinder() {
         if (wsText && wgText) {
             const wind = parseInt(wsText);
             const gust = parseInt(wgText);
-            const kite = wind + '|' + gust;
+            // const kite = wind + '|' + gust;
+			const kite = getKiteSize(wind, gust);
             
             const tide = parseInt(thText);
 
@@ -31,15 +32,13 @@ function windfinder() {
                 align-items: center;
                 justify-content: center;
                 font-size: 13px;
-                font-weight: bold;
                 color: ${textColor};
             `;
 
-            kiteCell.innerHTML = kite && (tide > 2.5 || !tide) ? `${kite}` : '—';
+            kiteCell.innerHTML = kite && /*(tide > 2.5 || !tide)*/ true ? `${kite}` : '—';
         }
     });
 }
 
-const observer = new MutationObserver(windfinder);
-observer.observe(document.body, { childList: true, subtree: true });
+setInterval(windfinder, 2000);
 windfinder();

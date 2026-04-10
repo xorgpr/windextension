@@ -60,14 +60,15 @@ function windguru() {
 
             // Если данные есть, считаем кайт
             if (!isNaN(wind) && !isNaN(gust)) {
-                const kite = wind + '|' + gust;
+                // const kite = wind + '|' + gust;
+				const kite = getKiteSize(wind, gust);
                 const textColor = kite === '⚠️' ? 'red' : 'black'; 
 
                 // Накатываем стили для ячейки
                 cell.innerHTML = kite || '—';
                 cell.style.cssText = `
                     text-align: center;
-                    font-size: 8px;
+                    font-size: 11px;
                     color: ${textColor};
                     vertical-align: middle;
                 `;
@@ -81,6 +82,5 @@ function windguru() {
     });
 }
 
-const observer = new MutationObserver(windguru);
-observer.observe(document.body, { childList: true, subtree: true });
+setInterval(windguru, 2000);
 windguru();
