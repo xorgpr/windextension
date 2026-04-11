@@ -1,4 +1,4 @@
-function windfinder(riderWeight) {
+function windfinder(riderWeight, kiteChart) {
     // 2. Get all lines in the table
     const rows = document.querySelectorAll('.fc-table-horizon');
 
@@ -11,7 +11,7 @@ function windfinder(riderWeight) {
             const wind = parseInt(wsText);
             const gust = parseInt(wgText);
             // const kite = wind + '|' + gust;
-			const kite = getKiteSize(wind, gust, riderWeight);
+			const kite = getKiteSize(wind, gust, riderWeight, kiteChart);
             
             const tide = parseInt(thText);
 
@@ -40,9 +40,10 @@ function windfinder(riderWeight) {
     });
 }
 
-chrome.storage.local.get(['riderWeight'], (result) => {
+chrome.storage.local.get(['riderWeight', 'kiteChart'], (result) => {
 	const weight = result.riderWeight || 65;
-	
-	setInterval(() => windfinder(weight), 2000);
-	windfinder(weight);
+	const chart = result.kiteChart || undefined;
+
+	setInterval(() => windfinder(weight, chart), 2000);
+	windfinder(weight, chart);
 });

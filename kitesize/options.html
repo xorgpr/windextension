@@ -3,13 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Настройки KiteSize</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        h2 { margin-top: 0; }
+        .section { margin-bottom: 24px; }
+        label { display: block; margin-bottom: 6px; }
+
+        /* Chart table */
+        #chartTable { border-collapse: collapse; margin-bottom: 8px; }
+        #chartTable th, #chartTable td { border: 1px solid #ccc; padding: 4px 8px; text-align: center; }
+        #chartTable input { width: 60px; text-align: center; }
+        .delete-btn { cursor: pointer; color: red; font-weight: bold; border: none; background: none; font-size: 16px; }
+        .status { color: green; margin-top: 4px; min-height: 1.2em; }
+
+        button { cursor: pointer; padding: 6px 12px; margin-right: 6px; margin-top: 6px; }
+    </style>
 </head>
 <body>
     <h2>Настройки профиля</h2>
-    <label>Ваш вес (кг): 
-        <input type="number" id="weightInput" min="30" max="150">
-    </label>
+
+    <div class="section">
+        <label>Ваш вес (кг):
+            <input type="number" id="weightInput" min="30" max="150">
+        </label>
+    </div>
+
+    <div class="section">
+        <h3>Таблица кайтов</h3>
+        <table id="chartTable">
+            <thead>
+                <tr>
+                    <th>Size</th>
+                    <th>Min (kts)</th>
+                    <th>Max (kts)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <button id="addRow">+ Add Row</button>
+        <button id="resetDefaults">Reset to Defaults</button>
+    </div>
+
     <button id="save">Сохранить</button>
+    <div class="status" id="status"></div>
 
     <script src="options.js"></script>
 </body>
