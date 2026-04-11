@@ -1,4 +1,4 @@
-function windguru() {
+function windguru(riderWeight) {
     const containers = document.querySelectorAll('.obal');
 
     containers.forEach(container => {
@@ -61,7 +61,7 @@ function windguru() {
             // Если данные есть, считаем кайт
             if (!isNaN(wind) && !isNaN(gust)) {
                 // const kite = wind + '|' + gust;
-				const kite = getKiteSize(wind, gust);
+				const kite = getKiteSize(wind, gust, riderWeight);
                 const textColor = kite === '⚠️' ? 'red' : 'black'; 
 
                 // Накатываем стили для ячейки
@@ -82,5 +82,9 @@ function windguru() {
     });
 }
 
-setInterval(windguru, 2000);
-windguru();
+chrome.storage.local.get(['riderWeight'], (result) => {
+	const weight = result.riderWeight || 65;
+	
+	setInterval(() => windguru(weight), 2000);
+	windguru(weight);
+});

@@ -3,7 +3,8 @@
   "name": "Kite Helper",
   "version": "1.0",
   "description": "Kite size helper",
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage"],
+  "options_page": "options.html",
   "content_scripts": [
     {
       "matches": ["https://www.windguru.cz/*"],
