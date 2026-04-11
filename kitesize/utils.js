@@ -1,5 +1,222 @@
 function getKiteSize(wind, gust, riderWeight = 65) {
     const BASE_WEIGHT = 75;
+    
+    // Официальная таблица Cabrinha Moto X для 75кг
+    const kiteChart = [
+        { size: 4,  min: 26, max: 39 },
+        { size: 5,  min: 24, max: 37 },
+        { size: 6,  min: 21, max: 35 },
+        { size: 7,  min: 19, max: 33 },
+        { size: 8,  min: 15, max: 30 },
+        { size: 9,  min: 13, max: 28 },
+        { size: 10, min: 12, max: 25 },
+        { size: 11, min: 11, max: 22 },
+        { size: 12, min: 9,  max: 20 },
+        { size: 14, min: 7,  max: 17 },
+    ];
+
+    if (!wind || !gust) return "Нет данных";
+
+    // 1. Адаптация таблицы под вес райдера
+    const ratio = riderWeight / BASE_WEIGHT;
+    const weightFactor = Math.pow(ratio, 0.75); 
+
+    const personalChart = kiteChart.map(k => ({
+        size: k.size,
+        min: k.min * weightFactor,
+        max: k.max * weightFactor
+    }));
+
+    // 2. Фильтруем подходящие кайты
+    // Кайт подходит, если:
+    // - Текущий ветер выше его минимума (он потянет)
+    // - Порыв ветра ниже его максимума (его не вывернет/не унесет тебя)
+    let validKites = personalChart.filter(k => 
+        wind >= k.min && 
+        gust <= k.max
+    );
+
+    if (validKites.length === 0) {
+        if (wind < personalChart[personalChart.length - 1].min) return "~";
+        return "!!!";
+    }
+
+    // 3. Сортируем от меньшего к большему
+    validKites.sort((a, b) => a.size - b.size);
+
+    // 4. Формируем строку с результатами
+    const resultStrings = validKites.map(k => {
+        let warning = "";
+        
+        // Процент загрузки кайта по порыву
+        const loadFactor = gust / k.max;
+
+        if (loadFactor > 0.95) {
+            warning = " !!";
+        } else if (loadFactor > 0.85) {
+            warning = " !";
+        } else if (loadFactor < 0.6) {
+            warning = " *";
+        }
+
+        return `${k.size}${warning}`;
+    });
+
+    return resultStrings.join('<br>');
+}
+
+// ПРИМЕР: 
+// При ветре 21 и порыве 26 для 65кг выведет:
+// 6m
+// 7m ⚠️
+
+/*function getKiteSize(wind, gust, riderWeight = 65, preferBig = false) {
+    const BASE_WEIGHT = 75;
+    
+    // Официальная таблица Moto X для 75кг
+    const kiteChart = [
+        { size: 4,  min: 26, max: 39 },
+        { size: 5,  min: 24, max: 37 },
+        { size: 6,  min: 21, max: 35 },
+        { size: 7,  min: 19, max: 33 },
+        { size: 8,  min: 15, max: 30 },
+        { size: 9,  min: 13, max: 28 },
+        { size: 10, min: 12, max: 25 },
+        { size: 11, min: 11, max: 22 },
+        { size: 12, min: 9,  max: 20 },
+        { size: 14, min: 7,  max: 17 },
+    ];
+
+    if (!wind || !gust) return null;
+
+    // 1. Адаптация таблицы под вес
+    const weightFactor = Math.pow(riderWeight / BASE_WEIGHT, 0.75); 
+    const personalChart = kiteChart.map(k => ({
+        size: k.size,
+        min: k.min * weightFactor,
+        max: k.max * weightFactor
+    }));
+
+    // 2. Находим ВСЕ кайты, которые тянут в этот ветер и безопасны на порывах
+    // Мы фильтруем так: базовый ветер выше минимума И порыв ниже максимума
+    let validKites = personalChart.filter(k => 
+        wind >= k.min && 
+        gust <= k.max
+    );
+
+    // Если ничего не подошло (слишком слабо или слишком сильно)
+    if (validKites.length === 0) {
+        if (wind < personalChart[personalChart.length - 1].min) return 'no wind';
+        return '⚠️ Overpower';
+    }
+
+    // 3. Формируем массив результатов с оценкой рисков
+    const results = validKites.map(k => {
+        let warning = '';
+        // Если порыв занимает более 85% рабочего диапазона для твоего веса
+        if (gust > k.max * 0.85) warning = '⚠️';
+        if (gust > k.max * 0.95) warning = '⚠️‼️';
+        
+        return {
+            size: k.size,
+            label: k.size + 'm' + (warning ? ' ' + warning : ''),
+            isRisky: warning !== ''
+        };
+    });
+
+    // 4. Сортируем: большие в начале
+    results.sort((a, b) => b.size - a.size);
+
+    // 5. Выбираем "Главный совет" на основе флага
+    // Если preferBig = true, берем самый большой (для прыжков/лайтвинда)
+    // Если false, берем самый маленький (безопасный/комфортный)
+    const recommended = preferBig ? results[0] : results[results.length - 1];
+
+    return {
+        recommended: recommended.label,
+        allSizes: results.map(r => r.label),
+        raw: results // Для отладки
+    };
+}*/
+
+// ПРИМЕР ИСПОЛЬЗОВАНИЯ:
+// const advice = getKiteSize(21, 26, 65, true);
+// console.log(advice.recommended); // "7m"
+// console.log(advice.allSizes);   // ["7m", "6m"]
+
+/*function getKiteSize(wind, gust, riderWeight = 65) {
+    const BASE_WEIGHT = 75;
+    
+    // Официальная таблица Moto X для 75кг
+    const kiteChart = [
+        { size: 4,  min: 26, max: 39 },
+        { size: 5,  min: 24, max: 37 },
+        { size: 6,  min: 21, max: 35 },
+        { size: 7,  min: 19, max: 33 },
+        { size: 8,  min: 15, max: 30 },
+        { size: 9,  min: 13, max: 28 },
+        { size: 10, min: 12, max: 25 },
+        { size: 11, min: 11, max: 22 },
+        { size: 12, min: 9,  max: 20 },
+        { size: 14, min: 7,  max: 17 },
+    ];
+
+    if (!wind || !gust) return null;
+
+    // 1. Учитываем вес сразу (сдвигаем ветровые диапазоны)
+    // Чем легче райдер, тем раньше для него наступает предел кайта
+    const ratio = riderWeight / BASE_WEIGHT;
+    const weightFactor = Math.pow(ratio, 0.75); 
+
+    // Создаем персональную таблицу для 65кг
+    const personalChart = kiteChart.map(k => ({
+        size: k.size,
+        min: k.min * weightFactor,
+        max: k.max * weightFactor
+    }));
+
+    // 2. Ищем все кайты, в диапазон которых мы попадаем базовым ветром
+    let candidates = personalChart.filter(k => wind >= k.min && wind <= k.max);
+
+    if (candidates.length === 0) {
+        if (wind < personalChart[personalChart.length - 1].min) return 'no wind';
+        return '⚠️'; // Передоз для всех размеров
+    }
+
+    // 3. Выбираем лучший кайт. 
+    // Обычно это самый большой из безопасных (чтобы прыгать) 
+    // ИЛИ средний, если порывы сильные.
+    // Давай отсортируем кандидатов от больших к маленьким
+    candidates.sort((a, b) => b.size - a.size);
+
+    let best = null;
+    let warning = '';
+
+    for (let k of candidates) {
+        // Если порыв входит в диапазон - это наш кандидат
+        if (gust <= k.max) {
+            best = k;
+            
+            // Если порыв очень близко к краю (90% и выше от max) — добавим знак
+            if (gust > k.max * 0.9) {
+                warning = ' ⚠️';
+            }
+            break; // Берем первый (самый большой), который прошел по порыву
+        }
+    }
+
+    // Если даже самый маленький кайт из подошедших по ветру не держит порыв
+    if (!best) {
+        // Берем самый маленький из возможных и ставим жесткое предупреждение
+        best = candidates[candidates.length - 1];
+        warning = ' ⚠️‼️';
+    }
+
+    return best.size + 'm' + warning;
+}*/
+
+/*function getKiteSize(wind, gust, riderWeight = 65) {
+    const BASE_WEIGHT = 75;
 
     // ОФИЦИАЛЬНАЯ ТАБЛИЦА CABRINHA MOTO X (для 75кг)
     const kiteChart = [
@@ -58,7 +275,7 @@ function getKiteSize(wind, gust, riderWeight = 65) {
     );
 
     return finalSize + 'm';
-}
+}*/
 
 /*function getKiteSize(wind, gust, riderWeight = 65) {
     const BASE_WEIGHT = 75;
