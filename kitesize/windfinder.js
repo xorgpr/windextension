@@ -5,16 +5,12 @@ function windfinder(riderWeight, kiteChart) {
     rows.forEach(row => {
         const wsText = row.querySelector('.cell-ws .unit')?.innerText;
         const wgText = row.querySelector('.cell-wg .unit')?.innerText;
-        const thText = row.querySelector('.cell-th .unit')?.innerText;
-
+        
         if (wsText && wgText) {
             const wind = parseInt(wsText);
             const gust = parseInt(wgText);
-            // const kite = wind + '|' + gust;
 			const kite = getKiteSize(wind, gust, riderWeight, kiteChart);
             
-            const tide = parseInt(thText);
-
             // 3. Add custom cell
             let kiteCell = row.querySelector('.custom-kite-cell');
             if (!kiteCell) {
@@ -23,19 +19,18 @@ function windfinder(riderWeight, kiteChart) {
                 row.appendChild(kiteCell);
             }
 
-            // Динамический цвет: если скрипт вернул знак ⚠️ (опасно) — делаем красным
-            const textColor = kite === '⚠️' ? 'red' : 'green';
-
             // 4. customize
             kiteCell.style.cssText = `
                 display: flex;
+                flex-direction: column;
                 align-items: center;
                 justify-content: center;
+                line-height: 0.8;
                 font-size: 13px;
-                color: ${textColor};
+                padding: 4px 0;
             `;
 
-            kiteCell.innerHTML = kite && /*(tide > 2.5 || !tide)*/ true ? `${kite}` : '—';
+            kiteCell.innerHTML = kite ? `${kite}` : '—';
         }
     });
 }

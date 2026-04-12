@@ -60,17 +60,14 @@ function windguru(riderWeight, kiteChart) {
 
             // Если данные есть, считаем кайт
             if (!isNaN(wind) && !isNaN(gust)) {
-                // const kite = wind + '|' + gust;
-				const kite = getKiteSize(wind, gust, riderWeight, kiteChart);
-                const textColor = kite === '⚠️' ? 'red' : 'black'; 
-
+                const kite = getKiteSize(wind, gust, riderWeight, kiteChart);
+                
                 // Накатываем стили для ячейки
                 cell.innerHTML = kite || '—';
                 cell.style.cssText = `
                     text-align: center;
                     font-size: 11px;
-                    color: ${textColor};
-                    vertical-align: middle;
+                    vertical-align: top;
                 `;
             } else {
                 cell.innerHTML = '';
