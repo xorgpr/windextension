@@ -1,17 +1,17 @@
 function windfinder(riderWeight, kiteChart) {
-    // 2. Get all lines in the table
+    // Get all forecast rows in the table
     const rows = document.querySelectorAll('.fc-table-horizon');
 
     rows.forEach(row => {
         const wsText = row.querySelector('.cell-ws .unit')?.innerText;
         const wgText = row.querySelector('.cell-wg .unit')?.innerText;
-        
+
         if (wsText && wgText) {
             const wind = parseInt(wsText);
             const gust = parseInt(wgText);
-			const kite = getKiteSize(wind, gust, riderWeight, kiteChart);
-            
-            // 3. Add custom cell
+            const kite = getKiteSize(wind, gust, riderWeight, kiteChart);
+
+            // Add or update custom equipment size cell
             let kiteCell = row.querySelector('.custom-kite-cell');
             if (!kiteCell) {
                 kiteCell = document.createElement('div');
@@ -19,7 +19,7 @@ function windfinder(riderWeight, kiteChart) {
                 row.appendChild(kiteCell);
             }
 
-            // 4. customize
+            // Style the cell
             kiteCell.style.cssText = `
                 display: flex;
                 flex-direction: column;
@@ -36,9 +36,9 @@ function windfinder(riderWeight, kiteChart) {
 }
 
 chrome.storage.local.get(['riderWeight', 'kiteChart'], (result) => {
-	const weight = result.riderWeight || 65;
-	const chart = result.kiteChart || undefined;
+    const weight = result.riderWeight || 65;
+    const chart = result.kiteChart || undefined;
 
-	setInterval(() => windfinder(weight, chart), 2000);
-	windfinder(weight, chart);
+    setInterval(() => windfinder(weight, chart), 2000);
+    windfinder(weight, chart);
 });

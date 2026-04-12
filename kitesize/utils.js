@@ -16,9 +16,9 @@ function getKiteSize(wind, gust, riderWeight = 65, kiteChart) {
 
     const chart = kiteChart || DEFAULT_KITE_CHART;
 
-    if (!wind || !gust) return "Нет данных";
+    if (!wind || !gust) return "N/A";
 
-    // 1. Адаптация таблицы под вес райдера
+    // 1. Adapt the chart to rider weight
     const ratio = riderWeight / BASE_WEIGHT;
     const weightFactor = Math.pow(ratio, 0.75);
 
@@ -28,10 +28,10 @@ function getKiteSize(wind, gust, riderWeight = 65, kiteChart) {
         max: k.max * weightFactor
     }));
 
-    // 2. Фильтруем подходящие кайты
-    // Кайт подходит, если:
-    // - Текущий ветер выше его минимума (он потянет)
-    // - Порыв ветра ниже его максимума (его не вывернет/не унесет тебя)
+    // 2. Filter suitable equipment
+    // An item is valid if:
+    // - Current wind is above its minimum (user can power it up)
+    // - Gust wind is below its maximum (won't get overpowered)
     let validKites = personalChart.filter(k => 
         wind >= k.min && 
         gust <= k.max
@@ -42,20 +42,20 @@ function getKiteSize(wind, gust, riderWeight = 65, kiteChart) {
         return "!!!";
     }
 
-    // 3. Сортируем от меньшего к большему
+    // 3. Sort from smallest to largest
     validKites.sort((a, b) => a.size - b.size);
 
-    // 4. Формируем строку с результатами
+    // 4. Build the result string with color indicators
     const resultStrings = validKites.map(k => {
         const loadFactor = gust / k.max;
-        let color = "#2ecc71"; // Зеленый (ок)
+        let color = "#2ecc71"; // Green (OK)
 
         if (loadFactor > 0.95) {
-            color = "#ff0000ff"; // Красный (предел)
+            color = "#ff0000ff"; // Red (limit)
         } else if (loadFactor > 0.82) {
-            color = "#ffa500"; // Оранжевый (много тяги)
+            color = "#ffa500"; // Orange (high pull)
         } else if (loadFactor < 0.65) {
-            color = "#00ff6aff"; // Голубой (лайтвинд для этого размера)
+            color = "#00ff6aff"; // Light blue (lightwind for this size)
         }
 
         return `<span style="color: ${color};">${k.size}</span>`;

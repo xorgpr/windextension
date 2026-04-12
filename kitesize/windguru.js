@@ -2,8 +2,8 @@ function windguru(riderWeight, kiteChart) {
     const containers = document.querySelectorAll('.obal');
 
     containers.forEach(container => {
-        // --- ШАГ 0: Очистка от предыдущих запусков скрипта ---
-        // Ищем и удаляем наши же строки в обеих таблицах
+        // --- Step 0: Clean up from previous script runs ---
+        // Find and remove our injected rows in both tables
         const oldLegendRow = container.querySelector('.table_legend tr.param.KITESIZE');
         if (oldLegendRow) oldLegendRow.remove();
 
@@ -11,27 +11,27 @@ function windguru(riderWeight, kiteChart) {
         if (oldDataRow) oldDataRow.remove();
 
 
-        // 1. Ищем строки в таблице Легенды (слева) и Данных (справа)
+        // 1. Find rows in the Legend table (left) and Data table (right)
         const legendWindRow = container.querySelector('.table_legend tr.param.WINDSPD');
         const dataWindRow = container.querySelector('.tabulka tr.param.WINDSPD');
         const dataGustRow = container.querySelector('.tabulka tr.param.GUST');
 
         if (!legendWindRow || !dataWindRow || !dataGustRow) return;
 
-        // --- ШАГ 1: Обновляем левую колонку (Легенду) ---
-        // Клонируем строку ветра, чтобы сохранить нужную высоту и верстку
+        // --- Step 2: Update the left column (Legend) ---
+        // Clone the wind row to preserve height and layout
         const newLegendRow = legendWindRow.cloneNode(true);
         newLegendRow.className = 'param KITESIZE';
         newLegendRow.id = newLegendRow.id.replace('WINDSPD', 'KITESIZE');
-        
-        // Меняем текст
+
+        // Change the text
         const titleCell = newLegendRow.querySelector('td');
         if (titleCell) {
             titleCell.innerHTML = 'Kite Size';
         }
         legendWindRow.parentNode.appendChild(newLegendRow);
 
-        // --- ШАГ 2: Обновляем правую сетку (Данные) ---
+        // --- Step 3: Update the right grid (Data) ---
         const newDataRow = dataWindRow.cloneNode(true);
         newDataRow.className = 'trow param KITESIZE';
         newDataRow.id = newDataRow.id.replace('WINDSPD', 'KITESIZE');
@@ -40,29 +40,29 @@ function windguru(riderWeight, kiteChart) {
         const gustCells = dataGustRow.querySelectorAll('td');
         const kiteCells = newDataRow.querySelectorAll('td');
 
-        // Проходимся по каждой ячейке в строке
+        // Iterate over each cell in the row
         kiteCells.forEach((cell, index) => {
-            // Очищаем цвета фона, скопированные от скорости ветра
+            // Clear background colors copied from wind speed
             cell.style.backgroundColor = '';
-            
-            // Если это узкая ячейка-разделитель (между днями), оставляем её пустой
+
+            // If this is a narrow separator cell (between days), leave it empty
             if (cell.classList.contains('spacer')) {
                 cell.innerHTML = '';
                 return;
             }
 
-            // Получаем данные
+            // Get data
             const windText = windCells[index]?.innerText;
             const gustText = gustCells[index]?.innerText;
 
             const wind = parseInt(windText);
             const gust = parseInt(gustText);
 
-            // Если данные есть, считаем кайт
+            // If data exists, calculate equipment size
             if (!isNaN(wind) && !isNaN(gust)) {
                 const kite = getKiteSize(wind, gust, riderWeight, kiteChart);
-                
-                // Накатываем стили для ячейки
+
+                // Apply styles to the cell
                 cell.innerHTML = kite || '—';
                 cell.style.cssText = `
                     text-align: center;
@@ -74,7 +74,7 @@ function windguru(riderWeight, kiteChart) {
             }
         });
 
-        // Добавляем новую строку в конец таблицы данных
+        // Add the new row to the end of the data table
         dataWindRow.parentNode.appendChild(newDataRow);
     });
 }

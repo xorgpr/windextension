@@ -75,7 +75,7 @@ document.getElementById('save').addEventListener('click', () => {
 
     chrome.storage.local.set({ riderWeight: weight, kiteChart: chart }, () => {
         statusEl.style.color = 'green';
-        statusEl.textContent = 'Настройки сохранены! Обновите страницу с прогнозом.';
+        statusEl.textContent = 'Settings saved! Refresh the forecast page to apply.';
     });
 });
 
@@ -84,7 +84,7 @@ document.getElementById('resetDefaults').addEventListener('click', () => {
     renderChart(DEFAULT_CHART);
     chrome.storage.local.remove('kiteChart');
     statusEl.style.color = 'green';
-    statusEl.textContent = 'Chart reset to defaults. Click Сохранить to save.';
+    statusEl.textContent = 'Chart reset to defaults. Click Save to apply.';
 });
 
 // Add row

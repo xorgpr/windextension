@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Kite Helper",
-  "version": "1.0",
-  "description": "Kite size helper",
+  "name": "Wind Sports Helper",
+  "version": "1.0.0-beta",
+  "description": "Beta — Shows recommended equipment sizes (kites, wings, sails) on wind forecast websites. Configure your gear chart in Options.",
   "permissions": ["activeTab", "storage"],
   "options_page": "options.html",
   "content_scripts": [

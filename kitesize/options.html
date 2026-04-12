@@ -2,9 +2,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Настройки KiteSize</title>
+    <title>Wind Sports Helper — Settings</title>
     <style>
-        body { font-family: sans-serif; margin: 20px; }
+        body { font-family: sans-serif; margin: 20px; max-width: 700px; }
         h2 { margin-top: 0; }
         .section { margin-bottom: 24px; }
         label { display: block; margin-bottom: 6px; }
@@ -17,19 +17,45 @@
         .status { color: green; margin-top: 4px; min-height: 1.2em; }
 
         button { cursor: pointer; padding: 6px 12px; margin-right: 6px; margin-top: 6px; }
+
+        /* Disclaimer */
+        .disclaimer {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 4px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #856404;
+        }
+        .disclaimer strong { color: #664d03; }
     </style>
 </head>
 <body>
-    <h2>Настройки профиля</h2>
+    <h2>Wind Sports Helper</h2>
+
+    <div class="disclaimer">
+        <strong>Beta Version — Use at Your Own Risk.</strong><br>
+        This extension provides <em>recommendations only</em> based on the wind data shown on forecast websites
+        and the equipment chart you configure. The developer makes no guarantees about the accuracy of the
+        calculations and is <strong>not responsible</strong> for any injuries, equipment damage, or other
+        consequences that may arise from using this product. Always rely on your own judgment, experience, and
+        local conditions when selecting gear.
+    </div>
 
     <div class="section">
-        <label>Ваш вес (кг):
+        <h3>Profile Settings</h3>
+        <label>Your weight (kg):
             <input type="number" id="weightInput" min="30" max="150">
         </label>
     </div>
 
     <div class="section">
-        <h3>Таблица кайтов</h3>
+        <h3>Equipment Chart</h3>
+        <p style="font-size:13px;color:#555;margin:0 0 8px;">
+            Add sizes for kites, wings, sails, or any wind sports gear. Values are in knots (kts).
+        </p>
         <table id="chartTable">
             <thead>
                 <tr>
@@ -45,7 +71,7 @@
         <button id="resetDefaults">Reset to Defaults</button>
     </div>
 
-    <button id="save">Сохранить</button>
+    <button id="save">Save</button>
     <div class="status" id="status"></div>
 
     <script src="options.js"></script>
