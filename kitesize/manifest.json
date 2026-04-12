@@ -1,7 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Wind Sports Helper",
-  "version": "0.1",
+  "version": "0.1.0",
+  "version_name": "1.0 Beta",
+  "homepage_url": "https://github.com/xorgpr/windextension/",
   "description": "Beta — Shows recommended equipment sizes (kites, wings, sails) on wind forecast websites. Configure your gear chart in Options.",
   "permissions": ["activeTab", "storage"],
   "options_page": "options.html",
