@@ -20,7 +20,7 @@ function getKiteSize(wind, gust, riderWeight = 65, kiteChart) {
 
     // 1. Adapt the chart to rider weight
     const ratio = riderWeight / BASE_WEIGHT;
-    const weightFactor = Math.pow(ratio, 0.75);
+    const weightFactor = ratio; // Math.pow(ratio, 0.75);
 
     const personalChart = chart.map(k => ({
         size: k.size,

@@ -1,16 +1,3 @@
-const DEFAULT_CHART = [
-    { size: 4,  min: 26, max: 39 },
-    { size: 5,  min: 24, max: 37 },
-    { size: 6,  min: 21, max: 35 },
-    { size: 7,  min: 19, max: 33 },
-    { size: 8,  min: 15, max: 30 },
-    { size: 9,  min: 13, max: 28 },
-    { size: 10, min: 12, max: 25 },
-    { size: 11, min: 11, max: 22 },
-    { size: 12, min: 9,  max: 20 },
-    { size: 14, min: 7,  max: 17 },
-];
-
 const tbody = document.querySelector('#chartTable tbody');
 const statusEl = document.getElementById('status');
 
@@ -22,7 +9,7 @@ function renderChart(chart) {
 function addRow(size = '', min = '', max = '') {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-        <td><input type="number" value="${size}" min="1" step="1"></td>
+        <td><input type="text" value="${size}" min="1" step="1"></td>
         <td><input type="number" value="${min}" min="0" step="1"></td>
         <td><input type="number" value="${max}" min="0" step="1"></td>
         <td><button class="delete-btn" title="Delete row">&times;</button></td>
@@ -36,7 +23,7 @@ function readChart() {
     const chart = [];
     rows.forEach(row => {
         const inputs = row.querySelectorAll('input');
-        const size = Number(inputs[0].value);
+        const size = inputs[0].value;
         const min = Number(inputs[1].value);
         const max = Number(inputs[2].value);
         if (size && min && max) {
@@ -50,7 +37,7 @@ function readChart() {
 // Load weight + chart on open
 chrome.storage.local.get(['riderWeight', 'kiteChart'], (result) => {
     document.getElementById('weightInput').value = result.riderWeight || 65;
-    renderChart(result.kiteChart || DEFAULT_CHART);
+    renderChart(result.kiteChart || DEFAULT_KITE_CHART);
 });
 
 // Save
@@ -81,7 +68,7 @@ document.getElementById('save').addEventListener('click', () => {
 
 // Reset to defaults
 document.getElementById('resetDefaults').addEventListener('click', () => {
-    renderChart(DEFAULT_CHART);
+    renderChart(DEFAULT_KITE_CHART);
     chrome.storage.local.remove('kiteChart');
     statusEl.style.color = 'green';
     statusEl.textContent = 'Chart reset to defaults. Click Save to apply.';
